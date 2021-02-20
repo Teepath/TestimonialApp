@@ -7,11 +7,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import Button from "@material-ui/core/Button";
 
-import config from "../config/config";
-
-const storage = config.storage;
-const db = config.firestore;
-
 const useStyles = makeStyles((theme) => ({
   root: {
     //   margin: theme.spacing(1),
@@ -45,68 +40,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function InputForn() {
+function InputForn({ setState, state, handleSubmit, handleImageAsFile }) {
   const classes = useStyles();
 
   const users = ["vendor", "customer"];
-
-  const handleImageAsFile = (e) => {
-    const image = e.target.files[0];
-    setImageAsFile((imageFile) => image);
-  };
-
-  const id = Math.round(Math.random() * 10000000).toString();
-  const allInputs = { imgUrl: "" };
-  const [imageAsFile, setImageAsFile] = useState("");
-  const [imageAsUrl, setImageAsUrl] = useState(allInputs);
-
-  const handleUploadFile = () => {
-    const uploadTask = storage.ref(`/images/profiles/${id}`).put(imageAsFile);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        storage
-          .ref("images")
-          .child(`profiles/${id}`)
-          .getDownloadURL()
-          .then((url) => {
-            setImageAsUrl(url);
-          });
-      }
-    );
-  };
-
-  const [state, setState] = useState({
-    fullname: "",
-    location: "",
-    usertype: "",
-    experience: "",
-  });
-  console.log(imageAsFile);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(state);
-    db.collection("testimonials").doc().set({
-      fullname: state.fullname,
-      location: state.location,
-      usertype: state.usertype,
-      experience: state.experience,
-      imageUrl: imageAsUrl,
-    });
-  };
-
-  console.log(state);
-
-  useEffect(() => {
-    if (imageAsFile) {
-      handleUploadFile();
-    }
-  }, [id, imageAsFile]);
 
   return (
     <Grid xs={12} sm="12" md="12">

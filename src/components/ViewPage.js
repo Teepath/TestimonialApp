@@ -12,10 +12,8 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
     borderRadius: "10%",
     backGroundColor: "#FFFFFF",
-    position: "absolute",
-    top: "500px",
-    left: "100px",
-    right: "100px",
+    position: "relative",
+
     margin: "auto",
     padding: "20px",
   },
@@ -23,31 +21,37 @@ const useStyles = makeStyles((theme) => ({
   title: {
     display: "flex",
     justifyContent: "flex-start",
-    position: "absolute",
-    top: "220px",
+    // position: "relative",
+    // top: "232px",
+  },
+
+  imageWraper: {
+    position: "relative",
+    lef: "0px",
+    top: "10px",
+    bottom: "100px",
   },
 
   image: {
     width: "200px",
     height: "200px",
     borderRadius: "50%",
-    position: "absolute",
-    top: "20px",
   },
   gridWrapper: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    // display: "flex",
+    // flexDirection: "column",
+    // justifyContent: "center",
+    // alignItems: "center",
     padding: "25px",
+    position: "relative",
   },
 
   infoText: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-between",
-    position: "absolute",
-    top: "250px",
+    // position: "relative",
+    // top: "250px",
   },
 
   location: {
@@ -69,36 +73,20 @@ const useStyles = makeStyles((theme) => ({
     color: "#0D019A",
   },
   experience: {
-    position: "absolute",
+    position: "relative",
     top: "300px",
     width: "300px",
   },
 }));
 
-function ViewPage() {
+function ViewPage({ load, userData }) {
   const classes = useStyles();
-  const [userData, setUserDate] = useState([]);
-
-  const displayUserData = () => {
-    db.collection("testimonials")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.docs.forEach((doc) => {
-          let document = { id: doc.id, ...doc.data() };
-          setUserDate((prevState) => [...prevState, document]);
-        });
-        // console.log(documents);
-      });
-  };
 
   console.log(userData);
 
-  useEffect(() => {
-    let display = displayUserData();
-  }, []);
-
   return (
     <div className={classes.root}>
+      {load ? "Loading...." : null}
       <Grid container>
         {userData &&
           userData.map((res) => (
@@ -111,15 +99,19 @@ function ViewPage() {
               className={classes.gridWrapper}
               key={res.id}
             >
-              <img src={res.imageUrl} className={classes.image} alt="picture" />
-              <Typography variant="h6" className={classes.title}>
-                {res.fullname}
-              </Typography>
-              <div className={classes.infoText}>
-                <p className={classes.location}>{res.location}</p>
-                <p className={classes.customer}> {res.usertype}</p>
-              </div>
-              <div className={classes.experience}>
+              <div className={classes.imageWraper}>
+                <img
+                  src={res.imageUrl}
+                  className={classes.image}
+                  alt="picture"
+                />
+                <div>
+                  <Typography variant="h6">{res.fullname}</Typography>
+                </div>
+                <div className={classes.infoText}>
+                  <p className={classes.location}>{res.location}</p>
+                  <p className={classes.customer}> {res.usertype}</p>
+                </div>
                 <p>{res.experience}</p>
               </div>
             </Grid>
